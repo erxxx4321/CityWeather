@@ -72,10 +72,6 @@ input, button {
   outline: none;
 }
 
-input:focus, button:focus {
-  outline: none;
-}
-
 input[type="button"], input[type="submit"], input[type="color"], button {
   cursor: pointer;
 }
