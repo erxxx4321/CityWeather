@@ -10,67 +10,70 @@
 
 */
 
-const button = document.querySelector('.input-btn');
-const inputPlace = document.querySelector('.input');
-const weather = document.getElementById('weather');
+const button = document.querySelector(".input-btn");
+const inputPlace = document.querySelector(".input");
+const weather = document.getElementById("weather");
 
 // API setting
 const api = {
-  key: "068c66fb28702d26e797806f91b0ac93",
-  base: "https://api.openweathermap.org/data/2.5/"
-}
+	key: "068c66fb28702d26e797806f91b0ac93",
+	base: "https://api.openweathermap.org/data/2.5/",
+};
 
-// default weather location - taipei 
-function loadWeather(){
-    axios.get(`${api.base}weather?q=taipei&units=metric&appid=${api.key}`)
-    .then(res => {
-      const loading = `
+// default weather location - taipei
+function loadWeather() {
+	axios
+		.get(`${api.base}weather?q=taipei&units=metric&appid=${api.key}`)
+		.then((res) => {
+			const loading = `
         <p class="loading">Loading...</p>
       `;
-      weather.innerHTML = loading
-      setTimeout(() => {
-        const weatherDefault = `
+			weather.innerHTML = loading;
+			setTimeout(() => {
+				const weatherDefault = `
         <i class="icon wi wi-night-sleet wi-owm-${res.data.weather[0].id}"></i>
         <h1 class="city">${res.data.name}</h1>
         <p class="temp">${Math.round(res.data.main.temp)}<sup>°C</sup></p> 
         `;
-        
-        weather.innerHTML = weatherDefault;
-      }, 1000)
-      // console.log(data.name,data.weather[0].id, Math.round(data.main.temp));
-    });
+
+				weather.innerHTML = weatherDefault;
+			}, 1000);
+
+			// console.log(data.name,data.weather[0].id, Math.round(data.main.temp));
+		});
 }
 
 // update weather location - user's input
-function updateWeather(){
-  return axios.get(`${api.base}weather?q=${inputPlace.value}&units=metric&appid=${api.key}`)
-    .then(res => {
-      const weatherUpdate = `
+function updateWeather() {
+	return axios
+		.get(
+			`${api.base}weather?q=${inputPlace.value}&units=metric&appid=${api.key}`
+		)
+		.then((res) => {
+			const weatherUpdate = `
         <i class="icon wi wi-night-sleet wi-owm-${res.data.weather[0].id}"></i>
         <h1 class="city">${res.data.name}</h1>
         <p class="temp">${Math.round(res.data.main.temp)}<sup>°C</sup></p> 
       `;
 
-      weather.innerHTML = weatherUpdate;
+			weather.innerHTML = weatherUpdate;
 
-      // get countryId to updateTime
-      const countryId = res.data.sys.country;
-      // console.log(data.name, data.weather[0].id, Math.round(data.main.temp),data.sys.country);
-      return countryId
-    })
-    .catch(err => {
-      if(inputPlace.value) {
-        const error = 
-        `
+			// get countryId to updateTime
+			const countryId = res.data.sys.country;
+			// console.log(data.name, data.weather[0].id, Math.round(data.main.temp),data.sys.country);
+			return countryId;
+		})
+		.catch((err) => {
+			if (inputPlace.value) {
+				const error = `
           <p class="err">Wrong City Name!</p>
           <p class="err">Please try again.</p> 
          `;
 
-        weather.innerHTML = error;
-      }
-    });
+				weather.innerHTML = error;
+			}
+		});
 }
-
 
 /* 
 
@@ -84,49 +87,48 @@ const date = document.querySelector(".date");
 const time = document.querySelector(".time");
 
 // default time - user's current location
-function loadTime(){
-  let monYear = moment().format("LL");
-  let day = moment().format("ddd");
-  let hourMin = moment().format("LT");
+function loadTime() {
+	let monYear = moment().format("LL");
+	let day = moment().format("ddd");
+	let hourMin = moment().format("LT");
 
-  date.innerText = `${day}, ${monYear}`;
-  time.innerText = `${hourMin}`;
+	date.innerText = `${day}, ${monYear}`;
+	time.innerText = `${hourMin}`;
 }
 
 // update time - user inputted location
-function updateTime(){
-  updateWeather().then(res => {
-    let data = moment.tz.zonesForCountry(res);
-    let timeZone = data[0].aliasOf;
+function updateTime() {
+	updateWeather().then((res) => {
+		let data = moment.tz.zonesForCountry(res);
+		let timeZone = data[0].aliasOf;
 
-    let monYear = moment.tz(timeZone).format("LL");
-    let day = moment.tz(timeZone).format("ddd");
-    let hourMin = moment.tz(timeZone).format("LT");
+		let monYear = moment.tz(timeZone).format("LL");
+		let day = moment.tz(timeZone).format("ddd");
+		let hourMin = moment.tz(timeZone).format("LT");
 
-    date.innerText = `${day}, ${monYear}`;
-    time.innerText = `${hourMin}`;
-    
-    // console.log(data);
-    // console.log(day,monYear, hourMin)
-  })
+		date.innerText = `${day}, ${monYear}`;
+		time.innerText = `${hourMin}`;
+
+		// console.log(data);
+		// console.log(day,monYear, hourMin)
+	});
 }
 
 window.addEventListener("load", () => {
-  loadWeather();
-  loadTime();
+	loadWeather();
+	loadTime();
 });
 button.addEventListener("click", () => {
-  updateWeather();
-  updateTime();
+	updateWeather();
+	updateTime();
 });
 inputPlace.addEventListener("keydown", (e) => {
-    if (e.keyCode === 13) {
-      updateWeather();
-      updateTime()
-      inputPlace.blur();
-    }
-})
-
+	if (e.keyCode === 13) {
+		updateWeather();
+		updateTime();
+		inputPlace.blur();
+	}
+});
 
 /* 
 
@@ -136,15 +138,14 @@ inputPlace.addEventListener("keydown", (e) => {
 
 const inputColor = document.querySelector('input[type="color"]');
 
-function changeBackground(){
-  let colorValue = inputColor.value;
+function changeBackground() {
+	let colorValue = inputColor.value;
 
-  document.body.style.backgroundColor = colorValue;
-  inputColor.style.backgroundColor = colorValue;
+	document.body.style.backgroundColor = colorValue;
+	inputColor.style.backgroundColor = colorValue;
 }
 
 inputColor.addEventListener("change", changeBackground);
-
 
 /* 
 
@@ -153,7 +154,7 @@ inputColor.addEventListener("change", changeBackground);
 */
 
 function goTop() {
-  window.scrollTo(0, 0);
+	window.scrollTo(0, 0);
 }
 
-inputPlace.addEventListener('blur', goTop);
+inputPlace.addEventListener("blur", goTop);
